@@ -14,14 +14,14 @@ uvicorn app.main:app --reload
 
 Open http://127.0.0.1:8000
 
-## 3-minute judge demo script
+`pip install` is only needed the first time. To stop the server, press `Ctrl + C`.
 
-1. **Intro (30s)** — Point to header: Arthasathi, Digital Engagement pillar, multi-agent pipeline
-2. **Job change (60s)** — Click scenario → pipeline animates → show salary highlight → phone nudge → Approve
-3. **FD maturity (60s)** — Switch scenario → reinvestment options → Approve → audit trail
-4. **Close (30s)** — Optional: toggle DPDP consent to show compliance block; emphasize scale + RBI/DPDP readiness
+## How it works
 
-Presenter hints appear in the yellow bar at the top during the demo.
+1. Pick a scenario (**Job Change** or **FD Maturity**) to seed synthetic data and run the agent pipeline.
+2. The **Observer** detects a life event, the **Planner** drafts a nudge, and the **Compliance** guardrail checks consent and confidence.
+3. Approve the nudge to trigger a mock **Action** with a full, explainable audit trail.
+4. Toggle DPDP consent to see the compliance guardrail block or allow a nudge.
 
 ## What's included
 
