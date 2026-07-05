@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arthasathi — SBI Life-Event Agent</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --sbi-blue: #0d47a1;
+      --sbi-deep: #082a5e;
+      --sbi-gold: #f9a825;
+      --bg: #eef2f7;
+      --card: #ffffff;
+      --text: #1a2332;
+      --muted: #5c6b7a;
+      --border: #dde4ec;
+      --success: #1b7f4a;
+      --success-bg: #e8f5ee;
+      --danger: #b42318;
+      --danger-bg: #fdecea;
+      --warn: #92650a;
+      --warn-bg: #fef7e6;
+      --shadow: 0 4px 24px rgba(13, 71, 161, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "DM Sans", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .topbar {
+      background: linear-gradient(135deg, var(--sbi-deep) 0%, var(--sbi-blue) 100%);
+      color: #fff;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .brand { display: flex; align-items: center; gap: 0.85rem; }
+    .logo {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: rgba(255,255,255,0.15);
+      display: grid; place-items: center;
+      font-weight: 700; font-size: 1.1rem;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .brand h1 { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; }
+    .brand p { font-size: 0.82rem; opacity: 0.85; margin-top: 0.1rem; }
+    .pill {
+      background: rgba(249, 168, 37, 0.2);
+      border: 1px solid rgba(249, 168, 37, 0.45);
+      color: #ffe082;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* Presenter bar */
+    .presenter {
+      background: #fff8e6;
+      border-bottom: 1px solid #f0d78c;
+      padding: 0.65rem 1.5rem;
+      font-size: 0.85rem;
+      color: #6b4e09;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .presenter strong { color: #4a3600; }
+    .presenter-step { flex: 1; }
+
+    /* Layout */
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 1.25rem 1.5rem 2rem; }
+
+    .scenario-bar {
+      display: flex; gap: 0.75rem; flex-wrap: wrap;
+      margin-bottom: 1.25rem; align-items: center;
+    }
+    .scenario-bar .label { font-size: 0.8rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    button {
+      border: none; border-radius: 10px; cursor: pointer;
+      font-family: inherit; font-size: 0.88rem; font-weight: 600;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+    }
+    button:active { transform: scale(0.98); }
+    button:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+    .btn-scenario {
+      padding: 0.7rem 1.1rem;
+      background: var(--card);
+      color: var(--sbi-blue);
+      border: 2px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+    .btn-scenario:hover { border-color: var(--sbi-blue); }
+    .btn-scenario.active {
+      background: var(--sbi-blue); color: #fff; border-color: var(--sbi-blue);
+    }
+    .btn-scenario span { display: block; font-size: 0.72rem; font-weight: 500; opacity: 0.8; margin-top: 0.1rem; }
+
+    .btn-ghost {
+      padding: 0.7rem 1rem;
+      background: transparent;
+      color: var(--muted);
+      border: 1px dashed var(--border);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 1.25rem;
+      align-items: start;
+    }
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+    .card-title {
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--muted); margin-bottom: 1rem;
+    }
+
+    /* Customer panel */
+    .customer-hero {
+      display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;
+    }
+    .avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--sbi-blue), #1976d2);
+      color: #fff; display: grid; place-items: center;
+      font-weight: 700; font-size: 1.1rem;
+    }
+    .customer-hero h3 { font-size: 1.1rem; }
+    .customer-hero p { font-size: 0.82rem; color: var(--muted); }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+    .chip {
+      font-size: 0.72rem; font-weight: 600; padding: 0.3rem 0.6rem;
+      border-radius: 6px; background: #f0f4f9; color: var(--muted);
+    }
+    .chip.ok { background: var(--success-bg); color: var(--success); }
+    .chip.bad { background: var(--danger-bg); color: var(--danger); }
+
+    .tx-list { max-height: 180px; overflow-y: auto; }
+    .tx-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.55rem 0; border-bottom: 1px solid #f0f3f7;
+      font-size: 0.82rem;
+    }
+    .tx-row:last-child { border-bottom: none; }
+    .tx-row.highlight { background: #fff8e1; margin: 0 -0.5rem; padding-left: 0.5rem; padding-right: 0.5rem; border-radius: 6px; }
+    .tx-amt { font-weight: 600; color: var(--success); }
+
+    .holding-box {
+      margin-top: 1rem; padding: 0.75rem; background: #f7f9fc;
+      border-radius: 10px; font-size: 0.82rem;
+    }
+
+    /* Pipeline */
+    .pipeline {
+      display: flex; align-items: center; gap: 0.35rem;
+      margin-bottom: 1.25rem; flex-wrap: wrap;
+    }
+    .pipe-step {
+      flex: 1; min-width: 72px; text-align: center;
+      padding: 0.65rem 0.4rem; border-radius: 10px;
+      background: #f4f7fb; border: 2px solid transparent;
+      font-size: 0.72rem; font-weight: 700; color: var(--muted);
+      transition: all 0.4s ease;
+    }
+    .pipe-step .icon { font-size: 1.1rem; display: block; margin-bottom: 0.2rem; }
+    .pipe-step.active {
+      background: #e3f2fd; border-color: var(--sbi-blue); color: var(--sbi-blue);
+      transform: scale(1.03);
+    }
+    .pipe-step.done {
+      background: var(--success-bg); border-color: var(--success); color: var(--success);
+    }
+    .pipe-arrow { color: #c5d0dc; font-size: 0.9rem; }
+
+    /* Phone mockup */
+    .phone-wrap { display: flex; justify-content: center; margin: 0.5rem 0 1rem; }
+    .phone {
+      width: 100%; max-width: 320px;
+      background: #111; border-radius: 28px; padding: 10px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+    }
+    .phone-screen {
+      background: linear-gradient(180deg, #f5f7fa 0%, #e8edf3 100%);
+      border-radius: 20px; padding: 1rem; min-height: 280px;
+    }
+    .phone-notch {
+      width: 80px; height: 6px; background: #ccc; border-radius: 99px;
+      margin: 0 auto 0.75rem;
+    }
+    .app-header {
+      font-size: 0.7rem; color: var(--muted); text-align: center; margin-bottom: 0.75rem;
+    }
+    .nudge-card {
+      background: #fff; border-radius: 14px; padding: 1rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      animation: slideUp 0.5s ease;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .nudge-card.done-state { border: 2px solid var(--success); }
+    .nudge-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem; }
+    .nudge-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sbi-gold); }
+    .nudge-label { font-size: 0.68rem; font-weight: 700; color: var(--sbi-blue); text-transform: uppercase; letter-spacing: 0.05em; }
+    .nudge-msg { font-size: 0.9rem; font-weight: 500; margin-bottom: 0.75rem; line-height: 1.45; }
+    .why-box {
+      background: #f0f6ff; border-radius: 8px; padding: 0.65rem;
+      font-size: 0.78rem; margin-bottom: 0.75rem;
+    }
+    .why-box strong { color: var(--sbi-blue); font-size: 0.72rem; }
+    .why-box ul { margin: 0.35rem 0 0 1rem; color: var(--muted); }
+
+    .fd-options label {
+      display: block; padding: 0.5rem 0.65rem; margin-bottom: 0.35rem;
+      border: 1px solid var(--border); border-radius: 8px;
+      font-size: 0.8rem; cursor: pointer;
+    }
+    .fd-options label:has(input:checked) { border-color: var(--sbi-blue); background: #e3f2fd; }
+
+    .btn-approve {
+      width: 100%; padding: 0.75rem;
+      background: linear-gradient(135deg, var(--success), #2e9b5f);
+      color: #fff; border-radius: 10px; font-size: 0.9rem;
+      box-shadow: 0 4px 14px rgba(27, 127, 74, 0.35);
+    }
+    .btn-approve:hover { filter: brightness(1.05); }
+
+    .empty-state {
+      text-align: center; padding: 2.5rem 1rem; color: var(--muted);
+    }
+    .empty-state .big { font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.4; }
+    .empty-state p { font-size: 0.88rem; }
+
+    /* Audit timeline */
+    .timeline { position: relative; padding-left: 1.5rem; }
+    .timeline::before {
+      content: ""; position: absolute; left: 6px; top: 8px; bottom: 8px;
+      width: 2px; background: #e0e7ef;
+    }
+    .tl-item {
+      position: relative; padding-bottom: 0.85rem;
+      animation: fadeIn 0.4s ease backwards;
+    }
+    .tl-item:nth-child(1) { animation-delay: 0.1s; }
+    .tl-item:nth-child(2) { animation-delay: 0.25s; }
+    .tl-item:nth-child(3) { animation-delay: 0.4s; }
+    .tl-item:nth-child(4) { animation-delay: 0.55s; }
+    .tl-item:nth-child(5) { animation-delay: 0.7s; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateX(-8px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .tl-dot {
+      position: absolute; left: -1.5rem; top: 4px;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: #fff; border: 3px solid var(--sbi-blue);
+    }
+    .tl-item.done .tl-dot { border-color: var(--success); background: var(--success); }
+    .tl-agent {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.04em; color: var(--sbi-blue);
+    }
+    .tl-msg { font-size: 0.82rem; color: var(--text); margin-top: 0.15rem; }
+
+    .badge {
+      display: inline-block; font-size: 0.68rem; font-weight: 700;
+      padding: 0.2rem 0.5rem; border-radius: 5px; margin-bottom: 0.5rem;
+    }
+    .badge-approved { background: var(--success-bg); color: var(--success); }
+    .badge-blocked { background: var(--danger-bg); color: var(--danger); }
+
+  /* Toast */
+    .toast {
+      position: fixed; bottom: 1.5rem; right: 1.5rem;
+      background: var(--sbi-deep); color: #fff;
+      padding: 0.85rem 1.25rem; border-radius: 12px;
+      font-size: 0.88rem; font-weight: 500;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      transform: translateY(100px); opacity: 0;
+      transition: all 0.35s ease; z-index: 100; max-width: 340px;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { background: var(--success); }
+
+    .loading { opacity: 0.6; pointer-events: none; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">अ</div>
+      <div>
+        <h1>Arthasathi</h1>
+        <p>Proactive Life-Event Agent · SBI Hackathon @ GFF 2026</p>
+      </div>
+    </div>
+    <span class="pill">Digital Engagement · Agentic AI</span>
+  </header>
+
+  <div class="presenter" id="presenter">
+    <strong>Demo script:</strong>
+    <span class="presenter-step" id="presenter-text">Pick a scenario below to begin your 3-minute walkthrough.</span>
+  </div>
+
+  <div class="wrap">
+    <div class="scenario-bar">
+      <span class="label">Scenarios</span>
+      <button class="btn-scenario" id="btn-job" onclick="loadScenario('job_change')">
+        Job Change
+        <span>Salary hike → SIP step-up</span>
+      </button>
+      <button class="btn-scenario" id="btn-fd" onclick="loadScenario('fd_maturity')">
+        FD Maturity
+        <span>Deposit due → reinvest</span>
+      </button>
+      <button class="btn-ghost" onclick="toggleConsent()">Toggle DPDP consent</button>
+    </div>
+
+    <div class="grid">
+      <!-- Left: Customer context -->
+      <div>
+        <div class="card" style="margin-bottom:1.25rem">
+          <div class="card-title">Customer profile</div>
+          <div id="customer-panel">
+            <div class="empty-state">
+              <div class="big">👤</div>
+              <p>Load a scenario to view customer data</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="tx-card" style="display:none">
+          <div class="card-title">Transaction signals (synthetic)</div>
+          <div class="tx-list" id="tx-list"></div>
+        </div>
+      </div>
+
+      <!-- Right: Agent + nudge -->
+      <div>
+        <div class="card" style="margin-bottom:1.25rem">
+          <div class="card-title">Multi-agent pipeline</div>
+          <div class="pipeline" id="pipeline">
+            <div class="pipe-step" data-step="observer"><span class="icon">👁</span>Observer</div>
+            <span class="pipe-arrow">→</span>
+            <div class="pipe-step" data-step="planner"><span class="icon">📋</span>Planner</div>
+            <span class="pipe-arrow">→</span>
+            <div class="pipe-step" data-step="compliance"><span class="icon">🛡</span>Compliance</div>
+            <span class="pipe-arrow">→</span>
+            <div class="pipe-step" data-step="action"><span class="icon">⚡</span>Action</div>
+          </div>
+
+          <div class="phone-wrap">
+            <div class="phone">
+              <div class="phone-screen">
+                <div class="phone-notch"></div>
+                <div class="app-header">YONO SBI · Arthasathi</div>
+                <div id="nudge-panel">
+                  <div class="empty-state" style="padding:1.5rem 0">
+                    <div class="big">📱</div>
+                    <p>Customer nudge appears here</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Audit trail (DPDP · RBI-ready)</div>
+          <div id="audit">
+            <p style="color:var(--muted);font-size:0.85rem">Every agent decision is logged and explainable.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const SCRIPTS = {
+      idle: "Pick a scenario below to begin your 3-minute walkthrough.",
+      job_loaded: "① Point out salary jump in transactions → ② Show agent pipeline lighting up → ③ Customer gets SIP nudge.",
+      job_approve: "③ Click Approve to show human-in-the-loop execution → audit trail completes.",
+      fd_loaded: "① Show FD maturing in 5 days → ② Three reinvestment options prepared → ③ Compliance approved.",
+      fd_approve: "Approve reinvestment — show closed-loop execution without leaving the app.",
+      blocked: "Consent off → Compliance blocks the nudge. Re-enable consent and reload to compare.",
+      done: "Demo complete. Emphasize: proactive, explainable, consent-first banking at scale."
+    };
+
+    let activeScenario = null;
+
+    function setPresenter(key) {
+      document.getElementById("presenter-text").textContent = SCRIPTS[key] || SCRIPTS.idle;
+    }
+
+    function toast(msg, type = "") {
+      const el = document.getElementById("toast");
+      el.textContent = msg;
+      el.className = "toast show" + (type ? " " + type : "");
+      setTimeout(() => el.classList.remove("show"), 3500);
+    }
+
+    function initials(name) {
+      return (name || "?").split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
+    }
+
+    async function loadScenario(name) {
+      document.body.classList.add("loading");
+      document.getElementById("btn-job").classList.toggle("active", name === "job_change");
+      document.getElementById("btn-fd").classList.toggle("active", name === "fd_maturity");
+
+      const res = await fetch(`/api/seed/${name}`, { method: "POST" });
+      const data = await res.json();
+      activeScenario = name;
+
+      await animatePipeline();
+      await refresh();
+
+      setPresenter(name === "job_change" ? "job_loaded" : "fd_loaded");
+      toast(`Scenario loaded: ${data.title}`);
+      document.body.classList.remove("loading");
+    }
+
+    async function animatePipeline() {
+      const steps = ["observer", "planner", "compliance", "action"];
+      document.querySelectorAll(".pipe-step").forEach(s => {
+        s.classList.remove("active", "done");
+      });
+      for (const step of steps) {
+        const el = document.querySelector(`[data-step="${step}"]`);
+        el.classList.add("active");
+        await new Promise(r => setTimeout(r, 450));
+        el.classList.remove("active");
+        el.classList.add("done");
+      }
+    }
+
+    async function toggleConsent() {
+      await fetch("/api/consent/toggle", { method: "POST" });
+      toast("DPDP consent toggled — reload a scenario to see effect");
+      setPresenter("blocked");
+      if (activeScenario) await loadScenario(activeScenario);
+      else await refresh();
+    }
+
+    async function approve(id) {
+      const res = await fetch(`/api/events/${id}/approve`, { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) {
+        toast(data.error, "");
+        return;
+      }
+      toast(data.message, "success");
+      setPresenter(activeScenario === "job_change" ? "job_approve" : "fd_approve");
+      document.querySelector('[data-step="action"]')?.classList.add("done");
+      await refresh();
+      setTimeout(() => setPresenter("done"), 2000);
+    }
+
+    async function refresh() {
+      const res = await fetch("/api/state");
+      const data = await res.json();
+      renderCustomer(data.customer, data.holdings);
+      renderTxs(data.transactions, activeScenario);
+      renderNudge(data.events);
+      renderAudit(data.audit, data.events);
+    }
+
+    function renderCustomer(c, holdings) {
+      const el = document.getElementById("customer-panel");
+      if (!c) {
+        el.innerHTML = `<div class="empty-state"><div class="big">👤</div><p>Load a scenario to view customer data</p></div>`;
+        document.getElementById("tx-card").style.display = "none";
+        return;
+      }
+
+      const consentOk = c.consent_offers;
+      el.innerHTML = `
+        <div class="customer-hero">
+          <div class="avatar">${initials(c.name)}</div>
+          <div>
+            <h3>${c.name}</h3>
+            <p>SBI YONO · ${c.risk_profile} risk profile</p>
+          </div>
+        </div>
+        <div class="chips">
+          <span class="chip ${consentOk ? 'ok' : 'bad'}">Proactive offers: ${consentOk ? 'Consented' : 'Denied'}</span>
+          <span class="chip ${c.consent_insights ? 'ok' : ''}">Life-event insights</span>
+          <span class="chip ${c.consent_money ? 'ok' : ''}">Money movement (HITL)</span>
+        </div>
+        ${holdings && holdings.length ? `
+          <div class="holding-box">
+            <strong>Holdings</strong><br/>
+            ${holdings.map(h => {
+              const d = JSON.parse(h.details || '{}');
+              if (h.product_type === 'SIP') return `SIP: ${d.fund} · ₹${d.monthly}/mo`;
+              if (h.product_type === 'FD') return `FD: ₹${(d.amount||0).toLocaleString('en-IN')} · matures ${d.maturity_date}`;
+              return h.product_type;
+            }).join('<br/>')}
+          </div>
+        ` : ''}
+      `;
+    }
+
+    function renderTxs(txs, scenario) {
+      const card = document.getElementById("tx-card");
+      if (!txs.length) { card.style.display = "none"; return; }
+      card.style.display = "block";
+
+      const lastIdx = txs.length - 1;
+      document.getElementById("tx-list").innerHTML = txs.map((t, i) => {
+        const hl = (scenario === "job_change" && i >= lastIdx - 1) ? "highlight" : "";
+        return `<div class="tx-row ${hl}">
+          <span>${t.date}<br/><small style="color:var(--muted)">${t.description}</small></span>
+          <span class="tx-amt">+₹${t.amount.toLocaleString("en-IN")}</span>
+        </div>`;
+      }).join("");
+    }
+
+    function renderNudge(events) {
+      const el = document.getElementById("nudge-panel");
+      if (!events.length) {
+        el.innerHTML = `<div class="empty-state" style="padding:1.5rem 0"><div class="big">📱</div><p>Customer nudge appears here</p></div>`;
+        return;
+      }
+
+      const e = events[0];
+      const evidence = JSON.parse(e.evidence || "[]");
+      const blocked = e.compliance_status === "BLOCKED";
+      const done = e.status === "completed";
+      const badgeClass = blocked ? "badge-blocked" : "badge-approved";
+
+      let optionsHtml = "";
+      if (e.plan_action === "FD_REINVEST" && !blocked && !done) {
+        optionsHtml = `<div class="fd-options">
+          <label><input type="radio" name="fd" checked> Renew FD @ 7.1%</label>
+          <label><input type="radio" name="fd"> 50% FD + 50% debt SIP</label>
+          <label><input type="radio" name="fd"> Tax-saver FD</label>
+        </div>`;
+      }
+
+      const approveBtn = !blocked && !done
+        ? `<button class="btn-approve" onclick="approve(${e.id})">Approve with OTP</button>`
+        : done
+          ? `<p style="text-align:center;color:var(--success);font-weight:700;font-size:0.9rem">✓ Action completed</p>`
+          : `<p style="text-align:center;color:var(--danger);font-size:0.85rem">Blocked by compliance guardrail</p>`;
+
+      el.innerHTML = `
+        <div class="nudge-card ${done ? 'done-state' : ''}">
+          <div class="nudge-header">
+            <span class="nudge-dot"></span>
+            <span class="nudge-label">Arthasathi · ${e.event_type.replace("_", " ")}</span>
+          </div>
+          <span class="badge ${badgeClass}">${e.compliance_status}</span>
+          <p class="nudge-msg">${e.plan_message}</p>
+          <div class="why-box">
+            <strong>Why am I seeing this?</strong>
+            <ul>${evidence.map(x => `<li>${x}</li>`).join("")}</ul>
+          </div>
+          ${optionsHtml}
+          ${approveBtn}
+        </div>
+      `;
+    }
+
+    function renderAudit(audit, events) {
+      const el = document.getElementById("audit");
+      if (!audit.length) {
+        el.innerHTML = `<p style="color:var(--muted);font-size:0.85rem">Every agent decision is logged and explainable.</p>`;
+        return;
+      }
+
+      const agentIcons = { Observer: "observer", Planner: "planner", Compliance: "compliance", Action: "action", Human: "action" };
+      const done = events[0]?.status === "completed";
+
+      el.innerHTML = `<div class="timeline">${audit.map(a => {
+        const isDone = a.agent === "Action" || a.agent === "Human";
+        return `<div class="tl-item ${isDone && done ? 'done' : ''}">
+          <div class="tl-dot"></div>
+          <div class="tl-agent">${a.agent}</div>
+          <div class="tl-msg">${a.message}</div>
+        </div>`;
+      }).join("")}</div>`;
+    }
+  </script>
+</body>
+</html>
