@@ -37,8 +37,8 @@ Open http://127.0.0.1:8000
 - LLM-powered Planner
 - LangGraph orchestration
 - More life events (health, school fees)
-- Hindi UI
-- Real YONO integration
+- UI
+- Real integration
 - Separate admin console
 
 ## Project structure
